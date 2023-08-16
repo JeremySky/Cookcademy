@@ -12,6 +12,9 @@ struct RecipesListView: View {
     @EnvironmentObject private var recipeData: RecipeData
     let category: MainInformation.Category
     
+    @State private var isPresenting = false
+    @State private var newRecipe = Recipe()
+    
     private let listBackgroundColor = AppColor.background
     private let listTextColor = AppColor.foreground
     
@@ -24,8 +27,40 @@ struct RecipesListView: View {
             .foregroundColor(listTextColor)
         }
         .navigationTitle(navigationTitle)
+        .toolbar(content: {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    isPresenting = true
+                }, label: {
+                    Image(systemName: "plus")
+                })
+            }
+        })
+        .sheet(isPresented: $isPresenting) {
+            NavigationStack {
+                ModifyRecipeView(recipe: $newRecipe)
+                    .toolbar(content: {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Dismiss") {
+                                isPresenting = false
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            if newRecipe.isValid {
+                                Button("Add") {
+                                    recipeData.add(recipe: newRecipe)
+                                    isPresenting = false
+                                }
+                            }
+                        }
+                    })
+                    .navigationTitle("Add a New Recipe")
+            }
+        }
     }
 }
+
+
 
 extension RecipesListView {
     private var recipes: [Recipe] {
