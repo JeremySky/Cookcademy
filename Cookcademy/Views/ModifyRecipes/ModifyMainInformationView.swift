@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ModifyMainInformationView: View {
+    @Binding var mainInformation: MainInformation
+    
     private let listBackgroundColor = AppColor.background
     private let listTextColor = AppColor.foreground
-    
-    @Binding var mainInformation: MainInformation
     
     var body: some View {
         Form {
@@ -43,8 +43,10 @@ struct ModifyMainInformationView: View {
 
 
 struct ModifyMainInformationView_Previews: PreviewProvider {
-    @State static var recipe = Recipe()
+    @State static var mainInformation = MainInformation(name: "", description: "", author: "", category: .breakfast)
     static var previews: some View {
-        ModifyMainInformationView(mainInformation: $recipe.mainInformation)
+        NavigationStack {
+            ModifyMainInformationView(mainInformation: $mainInformation)
+        }
     }
 }

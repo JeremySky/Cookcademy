@@ -25,7 +25,7 @@ struct ModifyRecipeView: View {
       case .main:
           ModifyMainInformationView(mainInformation: $recipe.mainInformation)
       case .ingredients:
-        Text("Ingredients Editor")
+          ModifyIngredientsView(ingredients: $recipe.ingredients)
       case .directions:
         Text("Directions Editor")
       }
@@ -42,6 +42,8 @@ struct ModifyRecipeView: View {
 struct ModifyRecipeView_Previews: PreviewProvider {
     @State static var recipe = Recipe()
     static var previews: some View {
-        ModifyRecipeView(recipe: $recipe)
+        NavigationStack {
+            ModifyRecipeView(recipe: $recipe)
+        }
     }
 }

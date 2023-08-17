@@ -12,21 +12,19 @@ struct RecipeCategoryGridView: View {
     
     var body: some View {
         let columns = [GridItem(), GridItem()]
-        NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, content: {
-                    ForEach(MainInformation.Category.allCases,
-                            id: \.self) { category in
-                        NavigationLink {
-                            RecipesListView(category: category)
-                                .environmentObject(recipeData)
-                        } label: {
-                            CategoryView(category: category)
-                        }
-                        
+        ScrollView {
+            LazyVGrid(columns: columns, content: {
+                ForEach(MainInformation.Category.allCases,
+                        id: \.self) { category in
+                    NavigationLink {
+                        RecipesListView(category: category)
+                            .environmentObject(recipeData)
+                    } label: {
+                        CategoryView(category: category)
                     }
-                })
-            }
+                    
+                }
+            })
         }
         .navigationTitle("Categories")
     }

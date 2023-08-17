@@ -64,18 +64,29 @@ struct Ingredient {
             }
         }
     }
+    
+    init(name: String, quantity: Double, unit: Unit) {
+        self.name = name
+        self.quantity = quantity
+        self.unit = unit
+    }
+    
+    init() {
+        self.init(name: "", quantity: 1.0, unit: .none)
+    }
+    
+    enum Unit: String, CaseIterable {
+        case oz = "Ounces"
+        case g = "Grams"
+        case cups = "Cups"
+        case tbs = "Tablespoons"
+        case tsp = "Teaspoons"
+        case none = "No Units"
+        
+        var singularName: String { String(rawValue.dropLast()) }
+    }
 }
 
-enum Unit: String, CaseIterable {
-    case oz = "Ounces"
-    case g = "Grams"
-    case cups = "Cups"
-    case tbs = "Tablespoons"
-    case tsp = "Teaspoons"
-    case none = "No Units"
-    
-    var singularName: String { String(rawValue.dropLast()) }
-}
 
 struct Direction {
     var description: String
