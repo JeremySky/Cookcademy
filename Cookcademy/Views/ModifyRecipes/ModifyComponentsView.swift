@@ -10,6 +10,17 @@ import SwiftUI
 
 protocol RecipeComponent: CustomStringConvertible {
     init()
+    static func singularName() -> String
+    static func pluralName() -> String
+}
+
+extension RecipeComponent {
+    static func singularName() -> String {
+        String(describing: self).lowercased()
+    }
+    static func pluralName() -> String {
+        self.singularName() + "s"
+    }
 }
 
 protocol ModifyComponentView: View {
@@ -29,19 +40,25 @@ struct ModifyComponentsView<Component: RecipeComponent, DestinationView: ModifyC
             let addComponentView = DestinationView(component: $newComponent) { component in
                 components.append(component)
                 newComponent = Component()
-            }.navigationTitle("Add Component")
+            }.navigationTitle("Add \(Component.singularName().capitalized)")
             if components.isEmpty {
                 Spacer()
-                NavigationLink("Add the first component", destination: addComponentView)
+                NavigationLink("Add the first \(Component.singularName())", destination: addComponentView)
                 Spacer()
             } else {
+                HStack {
+                    Text(Component.pluralName().capitalized)
+                        .font(.title)
+                        .padding()
+                    Spacer()
+                }
                 List {
                     ForEach(components.indices, id: \.self) { index in
                         let component = components[index]
                         Text(component.description)
                     }
                     .listRowBackground(listBackgroundColor)
-                    NavigationLink("Add another component", destination: addComponentView)
+                    NavigationLink("Add another \(Component.singularName())", destination: addComponentView)
                         .buttonStyle(PlainButtonStyle())
                         .listRowBackground(listBackgroundColor)
                 }
@@ -54,9 +71,13 @@ struct ModifyComponentsView<Component: RecipeComponent, DestinationView: ModifyC
 struct ModifyComponentsView_Previews: PreviewProvider {
     @State static var emptyIngredients = [Ingredient]()
     @State static var recipe = Recipe.testRecipes[0]
+    @State static var newRecipe = Recipe()
     static var previews: some View {
         NavigationView {
             ModifyComponentsView<Ingredient, ModifyIngredientView>(components: $recipe.ingredients)
+        }
+        NavigationStack {
+            ModifyRecipeView(recipe: $newRecipe)
         }
     }
 }
