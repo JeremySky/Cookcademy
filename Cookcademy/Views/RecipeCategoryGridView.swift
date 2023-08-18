@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipeCategoryGridView: View {
-    @StateObject private var recipeData = RecipeData()
+    @EnvironmentObject private var recipeData: RecipeData
     
     var body: some View {
         let columns = [GridItem(), GridItem()]
@@ -51,6 +51,7 @@ struct RecipeCategoryGridView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             RecipeCategoryGridView()
+                .environmentObject(RecipeData())
         }
     }
 }
