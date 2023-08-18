@@ -23,12 +23,12 @@ extension RecipeComponent {
     }
 }
 
-protocol ModifyComponentView: View {
+protocol ModifiableComponentView: View {
     associatedtype Component
     init(component: Binding<Component>, createAction: @escaping (Component) -> Void)
 }
 
-struct ModifyComponentsView<Component: RecipeComponent, DestinationView: ModifyComponentView>: View where DestinationView.Component == Component {
+struct ModifyComponentsView<Component: RecipeComponent, DestinationView: ModifiableComponentView>: View where DestinationView.Component == Component {
     @Binding var components: [Component]
     @State private var newComponent = Component()
     
@@ -51,12 +51,22 @@ struct ModifyComponentsView<Component: RecipeComponent, DestinationView: ModifyC
                         .font(.title)
                         .padding()
                     Spacer()
+                    EditButton()
+                        .padding()
                 }
                 List {
                     ForEach(components.indices, id: \.self) { index in
                         let component = components[index]
-                        Text(component.description)
+                        let editComponentView = DestinationView(component: $components[index]) { _ in
+                            return
+                        }
+                        NavigationLink(component.description, destination: editComponentView)
+                            .navigationTitle("Edit " + "\(Component.singularName().capitalized)")
                     }
+                    .onDelete { components.remove(atOffsets: $0) }
+                    .onMove(perform: { indices, newOffset in
+                        components.move(fromOffsets: indices, toOffset: newOffset)
+                    })
                     .listRowBackground(listBackgroundColor)
                     NavigationLink("Add another \(Component.singularName())", destination: addComponentView)
                         .buttonStyle(PlainButtonStyle())

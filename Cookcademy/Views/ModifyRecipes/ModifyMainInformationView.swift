@@ -21,6 +21,7 @@ struct ModifyMainInformationView: View {
                 .listRowBackground(listBackgroundColor)
             Section(header: Text("Description")) {
                 TextEditor(text: $mainInformation.description)
+                    .frame(minHeight: 200)
                     .listRowBackground(listBackgroundColor)
             }
             Picker(selection: $mainInformation.category, label:

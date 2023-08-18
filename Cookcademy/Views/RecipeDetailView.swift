@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct RecipeDetailView: View {
-    let recipe: Recipe
+    @Binding var recipe: Recipe
     
     private let listBackgroundColor = AppColor.background
     private let listTextColor = AppColor.foreground
+    
+    @State private var isPresenting = false
     
     
     var body: some View {
@@ -52,15 +54,37 @@ struct RecipeDetailView: View {
                 }.listRowBackground(listBackgroundColor)
             }
         }
+        .toolbar { 
+            ToolbarItem {
+                HStack {
+                    Button("Edit") {
+                        isPresenting = true
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $isPresenting) {
+            NavigationView {
+                ModifyRecipeView(recipe: $recipe)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Save") {
+                                isPresenting = false
+                            }
+                        }
+                    }
+                    .navigationTitle("Edit Recipe")
+            }
+        }
         .navigationTitle(recipe.mainInformation.name)
     }
 }
-     
+
 struct RecipeDetailView_Previews: PreviewProvider {
     @State static var recipe = Recipe.testRecipes[0]
     static var previews: some View {
         NavigationStack {
-            RecipeDetailView(recipe: recipe)
+            RecipeDetailView(recipe: $recipe)
         }
     }
 }
