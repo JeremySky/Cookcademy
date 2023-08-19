@@ -45,6 +45,9 @@ struct MainTabView: View {
             UITabBar.appearance().scrollEdgeAppearance = appearance
         }
         .environmentObject(recipeData)
+        .onAppear {
+          recipeData.loadRecipes()
+          }
     }
 }
 

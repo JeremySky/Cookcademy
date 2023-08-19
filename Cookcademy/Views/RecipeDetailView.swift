@@ -16,6 +16,7 @@ struct RecipeDetailView: View {
     @AppStorage("listTextColor") private var listTextColor = AppColor.foreground
     
     @State private var isPresenting = false
+    @EnvironmentObject private var recipeData: RecipeData
     
     
     var body: some View {
@@ -77,7 +78,7 @@ struct RecipeDetailView: View {
             }
         }
         .sheet(isPresented: $isPresenting) {
-            NavigationView {
+            NavigationStack {
                 ModifyRecipeView(recipe: $recipe)
                     .toolbar {
                         ToolbarItem(placement: .confirmationAction) {
@@ -87,6 +88,9 @@ struct RecipeDetailView: View {
                         }
                     }
                     .navigationTitle("Edit Recipe")
+            }
+            .onDisappear {
+              recipeData.saveRecipes()
             }
         }
         .navigationTitle(recipe.mainInformation.name)
@@ -98,6 +102,7 @@ struct RecipeDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             RecipeDetailView(recipe: $recipe)
+                .environmentObject(RecipeData())
         }
     }
 }
