@@ -20,7 +20,7 @@ struct MainTabView: View {
                 Label("Recipes", systemImage: "list.dash")
             }
             NavigationStack {
-                RecipesListView(category: .breakfast)
+                RecipesListView(viewStyle: .favorites)
                 
             }
             .tabItem {

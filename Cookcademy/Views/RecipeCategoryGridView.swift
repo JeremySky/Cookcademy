@@ -17,7 +17,7 @@ struct RecipeCategoryGridView: View {
                 ForEach(MainInformation.Category.allCases,
                         id: \.self) { category in
                     NavigationLink {
-                        RecipesListView(category: category)
+                        RecipesListView(viewStyle: .singleCategory(category))
                             .environmentObject(recipeData)
                     } label: {
                         CategoryView(category: category)
